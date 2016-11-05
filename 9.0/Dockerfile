@@ -32,6 +32,15 @@ RUN set -x; \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
+# Install some Python modules
+RUN set -x; \
+    apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python-pip \
+        && rm -rf /var/lib/apt/lists/* \
+    && pip install \ 
+        bs4 PyPDF2 transliterate xlrd
+
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
 COPY ./openerp-server.conf /etc/odoo/
