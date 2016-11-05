@@ -39,7 +39,7 @@ RUN set -x; \
         python-pip \
         && rm -rf /var/lib/apt/lists/* \
     && pip install \ 
-        bs4 PyPDF2 transliterate xlrd
+        bs4 PyPDF2 transliterate xlrd odfpy
 
 
 # Copy entrypoint script and Odoo configuration file
