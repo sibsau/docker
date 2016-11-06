@@ -33,7 +33,7 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Install Aeroo Reports support
-ADD ../deb/python-aeroolib_1.0_all.deb /
+ADD ./python-aeroolib_1.0_all.deb /
 RUN set -x; \
         apt-get update \
         && dpkg --force-depends -i  python-aeroolib_1.0_all.deb \ 
