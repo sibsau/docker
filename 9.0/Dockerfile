@@ -32,23 +32,6 @@ RUN set -x; \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
-# Install Aeroo Reports support
-ADD aeroodocs-server_1.0_all.deb  /
-ADD python-aeroolib_1.0_all.deb /
-RUN set -x; \
-        apt-get update \
-        && dpkg --force-depends -i  python-aeroolib_1.0_all.deb \ 
-        && apt-get -y install -f --no-install-recommends \
-        && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false npm \
-        && rm -rf /var/lib/apt/lists/* python-aeroolib_1.0_all.deb
-
-RUN set -x; \
-        apt-get update \
-	&& dpkg --force-depends -i aeroodocs-server_1.0_all.deb \
-        && apt-get -y install -f --no-install-recommends \
-        && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false npm \
-        && rm -rf /var/lib/apt/lists/* aeroodocs-server_1.0_all.deb
-
 # Install some Python modules
 RUN set -x; \
     apt-get update \
