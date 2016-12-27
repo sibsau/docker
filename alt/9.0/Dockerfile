@@ -44,8 +44,8 @@ RUN set -x; \
         # && apt-get -y install -f --no-install-recommends \
         # && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false npm \
         # && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
-        && /bin/rm -rf /var/lib/apt/lists/* /var/cache/apt/*.bin /var/lib/rpm/* \
         && apt-get clean \
+        && /bin/rm -rf /var/lib/apt/lists/* /var/cache/apt/*.bin /var/lib/rpm/* \
         && pip install psycogreen==1.0
 
 # Install Odoo
