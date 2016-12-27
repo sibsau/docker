@@ -38,6 +38,7 @@ RUN set -x; \
                 python-module-gevent \
                 python-module-pip \
                 curl \
+                npm \
         # && curl -o wkhtmltox.deb -SL http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
         # && echo '40e8b906de658a2221b15e4e8cd82565a47d7ee8 wkhtmltox.deb' | sha1sum -c - \
         # && dpkg --force-depends -i wkhtmltox.deb \
@@ -46,7 +47,8 @@ RUN set -x; \
         # && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
         && apt-get clean \
         && /bin/rm -rf /var/lib/apt/lists/* /var/cache/apt/*.bin /var/lib/rpm/* \
-        && pip install psycogreen==1.0
+        && pip install psycogreen==1.0 \
+        && npm install -g less
 
 # Install Odoo
 ENV ODOO_VERSION 9.0
