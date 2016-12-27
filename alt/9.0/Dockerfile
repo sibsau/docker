@@ -44,6 +44,8 @@ RUN set -x; \
         # && apt-get -y install -f --no-install-recommends \
         # && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false npm \
         # && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
+        && /bin/rm /var/lib/apt/lists/* /var/cache/apt/*.bin /var/lib/rpm/* \
+        && apt-get clean \
         && pip install psycogreen==1.0
 
 # Install Odoo
@@ -51,11 +53,9 @@ ENV ODOO_VERSION 9.0
 ENV ODOO_RELEASE 20161218
 RUN set -x; \
         curl -o odoo.rpm -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/rpm/odoo_${ODOO_VERSION}c.${ODOO_RELEASE}.noarch.rpm \
-        # && echo 'e7f7cabcb760c90543b3a113a0f5676da5f9c314 odoo.deb' | sha1sum -c - \
+        # && echo 'e7f7cabcb760c90543b3a113a0f5676da5f9c314 odoo.rpm' | sha1sum -c - \
         && rpm -i --nodeps odoo.rpm \
-        # && apt-get update \
-        # && apt-get -y install -f --no-install-recommends \
-        && rm -rf /var/lib/apt/lists/* odoo.rpm
+        && /bin/rm odoo.rpm
 
 # Install Aeroo Reports support
 # ADD ./python-aeroolib_1.0_all.deb /
