@@ -46,9 +46,10 @@ RUN set -x; \
     apt-get update \
     && apt-get install -y --no-install-recommends \
         python-pip \
+        python-numpy \
         && rm -rf /var/lib/apt/lists/* \
     && pip install \ 
-        bs4 PyPDF2 transliterate xlrd odfpy numpy
+        bs4 PyPDF2 transliterate xlrd odfpy
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
