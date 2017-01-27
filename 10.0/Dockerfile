@@ -23,10 +23,10 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 10.0
-ENV ODOO_RELEASE 20161218
+ENV ODOO_RELEASE 20170127
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo '9c323bd1d6caac948218be27462d8062c633a53f odoo.deb' | sha1sum -c - \
+        && echo '6e5e6256679880a5d6d9916b320dc3782e685dc6 odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -37,10 +37,10 @@ RUN set -x; \
     apt-get update \
     && apt-get install -y --no-install-recommends \
         python-pip \
+        python-numpy \
         && rm -rf /var/lib/apt/lists/* \
     && pip install \ 
         bs4 PyPDF2 transliterate xlrd odfpy
-
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
