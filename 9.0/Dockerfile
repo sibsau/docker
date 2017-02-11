@@ -52,6 +52,17 @@ RUN set -x; \
         bs4 PyPDF2 transliterate xlrd odfpy
 
 # Install Postgres to support pg_dump
+RUN set -ex; \
+# pub   4096R/ACCC4CF8 2011-10-13 [expires: 2019-07-02]
+#       Key fingerprint = B97B 0AFC AA1A 47F0 44F2  44A0 7FCC 7D46 ACCC 4CF8
+# uid                  PostgreSQL Debian Repository
+	key='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8'; \
+	export GNUPGHOME="$(mktemp -d)"; \
+	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+	gpg --export "$key" > /etc/apt/trusted.gpg.d/postgres.gpg; \
+	rm -r "$GNUPGHOME"; \
+	apt-key list
+
 ENV PG_MAJOR 9.6
 ENV PG_VERSION 9.6.2-1.pgdg80+1
 
