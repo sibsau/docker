@@ -23,10 +23,10 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 9.0
-ENV ODOO_RELEASE 20170123
+ENV ODOO_RELEASE 20170211
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}c.${ODOO_RELEASE}_all.deb \
-        && echo 'c2289675eab5dcab664e4468764e4cc67afea2fd odoo.deb' | sha1sum -c - \
+        && echo 'e8818905ce526f1d8b0e046356567ebf8da84ecd odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -51,6 +51,20 @@ RUN set -x; \
     && pip install \ 
         bs4 PyPDF2 transliterate xlrd odfpy
 
+# Install Postgres to support pg_dump
+ENV PG_MAJOR 9.6
+ENV PG_VERSION 9.6.2-1.pgdg80+1
+
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
+
+RUN apt-get update \
+	&& apt-get install -y postgresql-common \
+	&& sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf \
+	&& apt-get install -y \
+		postgresql-$PG_MAJOR=$PG_VERSION \
+		postgresql-contrib-$PG_MAJOR=$PG_VERSION \
+	&& rm -rf /var/lib/apt/lists/*
+        
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
 COPY ./openerp-server.conf /etc/odoo/
