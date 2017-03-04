@@ -23,10 +23,10 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 10.0
-ENV ODOO_RELEASE 20170127
+ENV ODOO_RELEASE 20170304
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo '6e5e6256679880a5d6d9916b320dc3782e685dc6 odoo.deb' | sha1sum -c - \
+        && echo '1552e09b9212c74a2a877873c3097349f00ae600 odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -41,6 +41,32 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* \
     && pip install \ 
         bs4 PyPDF2 transliterate xlrd odfpy
+
+# Install Postgres to support pg_dump
+RUN set -ex; \
+# pub   4096R/ACCC4CF8 2011-10-13 [expires: 2019-07-02]
+#       Key fingerprint = B97B 0AFC AA1A 47F0 44F2  44A0 7FCC 7D46 ACCC 4CF8
+# uid                  PostgreSQL Debian Repository
+	key='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8'; \
+	export GNUPGHOME="$(mktemp -d)"; \
+	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+	gpg --export "$key" > /etc/apt/trusted.gpg.d/postgres.gpg; \
+	rm -r "$GNUPGHOME"; \
+	apt-key list
+
+ENV PG_MAJOR 9.6
+ENV PG_VERSION 9.6.2-1.pgdg80+1
+
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
+
+RUN apt-get update \
+	&& apt-get install -y postgresql-common \
+	&& sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf \
+	&& apt-get install -y \
+		postgresql-$PG_MAJOR=$PG_VERSION \
+		postgresql-contrib-$PG_MAJOR=$PG_VERSION \
+	&& rm -rf /var/lib/apt/lists/*
+        
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
