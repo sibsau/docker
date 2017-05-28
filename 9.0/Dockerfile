@@ -33,6 +33,8 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Install Aeroo Reports support
+#RUN pip install git+https://github.com/aeroo/aeroolib.git@master
+
 ADD ./python-aeroolib_1.0_all.deb /
 RUN set -x; \
         apt-get update \
