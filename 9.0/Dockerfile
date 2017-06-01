@@ -51,7 +51,7 @@ RUN set -x; \
         python-numpy \
         && rm -rf /var/lib/apt/lists/* \
     && pip install \ 
-        bs4 PyPDF2 transliterate xlrd odfpy SQLAlchemy
+        bs4 PyPDF2 transliterate xlrd odfpy SQLAlchemy config
 
 # Install Postgres to support pg_dump
 RUN set -ex; \
