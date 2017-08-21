@@ -74,6 +74,7 @@ RUN apt-get update \
 	&& apt-get install -y \
 		postgresql-$PG_MAJOR=$PG_VERSION \
 		postgresql-contrib-$PG_MAJOR=$PG_VERSION \
+		pg-activity \
 	&& rm -rf /var/lib/apt/lists/*
         
 
