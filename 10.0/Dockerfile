@@ -23,10 +23,10 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 10.0
-ENV ODOO_RELEASE 20170513
+ENV ODOO_RELEASE 20170821
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo 'ee2582ff96c1773452f06284d8c92411aac1cb3c odoo.deb' | sha1sum -c - \
+        && echo '33133029ce856ee90ece9c04fd57f94ec27e9085 odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -49,7 +49,7 @@ RUN set -x; \
         python-numpy \
         && rm -rf /var/lib/apt/lists/* \
     && pip install \ 
-        bs4 PyPDF2 transliterate xlrd odfpy SQLAlchemy
+        bs4 PyPDF2 transliterate xlrd odfpy SQLAlchemy config
 
 # Install Postgres to support pg_dump
 RUN set -ex; \
