@@ -9,6 +9,7 @@ RUN set -x; \
         apt-get update \
         && apt-get install -y --no-install-recommends \
             ca-certificates \
+            gnupg \
             curl \
             node-less \
             python3-pip \
