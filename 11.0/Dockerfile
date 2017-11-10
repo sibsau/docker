@@ -10,6 +10,7 @@ RUN set -x; \
         && apt-get install -y --no-install-recommends \
             ca-certificates \
             gnupg \
+            dirmngr \
             curl \
             node-less \
             python3-pip \
