@@ -23,10 +23,10 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 9.0
-ENV ODOO_RELEASE 20171109
+ENV ODOO_RELEASE 20180528
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}c.${ODOO_RELEASE}_all.deb \
-        && echo '66d3ce26247db9fe988132e45339ba43c8f23a47 odoo.deb' | sha1sum -c - \
+        && echo '5745fdc7da8a402dae6017779bfa176e6f58bbdf odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -51,7 +51,7 @@ RUN set -x; \
         python-numpy \
         && rm -rf /var/lib/apt/lists/* \
     && pip install \ 
-        bs4 PyPDF2 transliterate xlrd odfpy SQLAlchemy config
+        bs4 PyPDF2 transliterate xlrd xlwt odfpy SQLAlchemy config openpyxl caldav
 
 # Install Postgres to support pg_dump
 RUN set -ex; \
@@ -66,7 +66,7 @@ RUN set -ex; \
 	apt-key list
 
 ENV PG_MAJOR 9.6
-ENV PG_VERSION 9.6.6-1.pgdg80+1
+ENV PG_VERSION 9.6.9-2.pgdg90+1
 
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
