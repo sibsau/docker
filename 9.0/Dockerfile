@@ -23,10 +23,10 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 9.0
-ENV ODOO_RELEASE 20180528
+ENV ODOO_RELEASE 20180604
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}c.${ODOO_RELEASE}_all.deb \
-        && echo '5745fdc7da8a402dae6017779bfa176e6f58bbdf odoo.deb' | sha1sum -c - \
+        && echo 'aa91ce673832401a6305e6840673cc235fa5d0c7 odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -49,9 +49,10 @@ RUN set -x; \
     && apt-get install -y --no-install-recommends \
         python-pip \
         python-numpy \
+	python-qrcode \
         && rm -rf /var/lib/apt/lists/* \
     && pip install \ 
-        bs4 PyPDF2 transliterate xlrd xlwt odfpy SQLAlchemy config openpyxl caldav
+        bs4 PyPDF2 transliterate xlrd xlwt odfpy SQLAlchemy config openpyxl caldav configs
 
 # Install Postgres to support pg_dump
 RUN set -ex; \
