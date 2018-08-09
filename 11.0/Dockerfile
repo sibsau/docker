@@ -44,7 +44,7 @@ RUN set -x; \
         python-numpy \
         && rm -rf /var/lib/apt/lists/* \
     && pip3 install \ 
-        bs4 PyPDF2 transliterate xlrd odfpy SQLAlchemy config openpyxl caldav configs
+        bs4 PyPDF2 transliterate xlrd odfpy SQLAlchemy config openpyxl caldav configs phonenumbers
 
 # Install Postgres to support pg_dump
 RUN set -ex; \
