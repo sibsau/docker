@@ -28,23 +28,16 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 11.0
-ENV ODOO_RELEASE 20180710
+ENV ODOO_RELEASE 20180810
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo 'b843864476bb149d1b5715b7fa3ef726b3658d6a odoo.deb' | sha1sum -c - \
+        && echo 'eb57dde00dcc2394c6eb86179d2e475b47194b8a odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
-# Install some Python modules
-RUN set -x; \
-    apt-get update \
-    && apt-get install -y --no-install-recommends \
-        python-numpy \
-        && rm -rf /var/lib/apt/lists/* \
-    && pip3 install \ 
-        bs4 PyPDF2 transliterate xlrd odfpy SQLAlchemy config openpyxl caldav configs phonenumbers ldap
+
 
 # Install Postgres to support pg_dump
 RUN set -ex; \
@@ -72,8 +65,17 @@ RUN apt-get update \
 		rlwrap pg-activity \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Install some Python modules
+RUN set -x; \
+    apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python-numpy \
+        && rm -rf /var/lib/apt/lists/* \
+    && pip3 install \ 
+        bs4 PyPDF2 transliterate xlrd xlwt odfpy openpyxl SQLAlchemy config  caldav configs phonenumbers ldap qrcode
+	
 # Copy entrypoint script and Odoo configuration file
-RUN pip3 install num2words xlwt
+RUN pip3 install num2words
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
 RUN chown odoo /etc/odoo/odoo.conf
