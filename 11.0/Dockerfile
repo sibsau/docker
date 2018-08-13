@@ -48,11 +48,12 @@ RUN set -ex; \
 	export GNUPGHOME="$(mktemp -d)"; \
 	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 	gpg --export "$key" > /etc/apt/trusted.gpg.d/postgres.gpg; \
-	rm -r "$GNUPGHOME"; \
+	command -v gpgconf > /dev/null && gpgconf --kill all; \
+	rm -rf "$GNUPGHOME"; \
 	apt-key list
 
-ENV PG_MAJOR 9.6
-ENV PG_VERSION 9.6.10-1.pgdg90+1
+ENV PG_MAJOR 10
+ENV PG_VERSION 10.5-1.pgdg90+1
 
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
