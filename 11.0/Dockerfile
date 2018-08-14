@@ -70,9 +70,11 @@ RUN set -x; \
     apt-get update \
     && apt-get install -y --no-install-recommends \
         python-numpy \
+	git wget \
+	build-essential python3-dev libldap2-dev libsasl2-dev ldap-utils python-tox lcov valgrind \
         && rm -rf /var/lib/apt/lists/* \
     && pip3 install \ 
-        bs4 PyPDF2 transliterate xlrd xlwt odfpy openpyxl SQLAlchemy config  caldav configs phonenumbers ldap qrcode
+        bs4 PyPDF2 transliterate xlrd xlwt odfpy openpyxl SQLAlchemy config  caldav configs phonenumbers ldap qrcode wheel pyldap==2.4.28
 	
 # Copy entrypoint script and Odoo configuration file
 RUN pip3 install num2words
