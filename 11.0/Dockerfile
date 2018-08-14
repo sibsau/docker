@@ -69,13 +69,22 @@ RUN apt-get update \
 RUN set -x; \
     apt-get update \
     && apt-get install -y --no-install-recommends \
+        python-wheel \
         python-numpy \
 	git wget \
 	build-essential python3-dev libldap2-dev libsasl2-dev ldap-utils python-tox lcov valgrind \
         && rm -rf /var/lib/apt/lists/* \
     && pip3 install \ 
-        bs4 PyPDF2 transliterate xlrd xlwt odfpy openpyxl SQLAlchemy config  caldav configs phonenumbers ldap qrcode wheel pyldap==2.4.28
-	
+        bs4 PyPDF2 transliterate xlrd xlwt odfpy openpyxl SQLAlchemy config  caldav configs phonenumbers qrcode pyldap==2.4.28
+RUN set -x; \
+	pip3 install \
+		# git+https://github.com/aeroo/aeroolib.git
+		# waiting for PR https://github.com/aeroo/aeroolib/pull/12
+		git+https://github.com/adhoc-dev/aeroolib@master-fix-ods \
+		git+https://github.com/aeroo/currency2text.git \
+		# use this genshi version to fix error when, for eg, you send arguments like "date=True" check this https://genshi.edgewall.org/ticket/600
+		git+https://github.com/edgewall/genshi@stable/0.7.x
+		
 # Copy entrypoint script and Odoo configuration file
 RUN pip3 install num2words
 COPY ./entrypoint.sh /
