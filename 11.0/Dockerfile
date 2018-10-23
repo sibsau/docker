@@ -74,7 +74,7 @@ RUN set -x; \
 	build-essential python3-dev libldap2-dev libsasl2-dev ldap-utils python-tox lcov valgrind \
         && rm -rf /var/lib/apt/lists/* \
     && pip3 install \ 
-        bs4 PyPDF2 transliterate xlrd xlwt odfpy openpyxl SQLAlchemy config  caldav configs phonenumbers qrcode pyldap==2.4.28
+        bs4 PyPDF2 transliterate xlrd xlwt odfpy openpyxl SQLAlchemy config  caldav configs phonenumbers qrcode pyldap==2.4.28 ipdb
 
 RUN set -x; \
     apt-get update \
