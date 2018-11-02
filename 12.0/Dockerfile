@@ -28,10 +28,10 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 12.0
-ENV ODOO_RELEASE 20181007
+ENV ODOO_RELEASE 20181102
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo '53edbd1716fcc2eec611ba538065b6597d8169b5 odoo.deb' | sha1sum -c - \
+        && echo 'c6226be81107c49517d4614ca5fe15d4d656ef36 odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -53,7 +53,7 @@ RUN set -ex; \
 	apt-key list
 
 ENV PG_MAJOR 10
-ENV PG_VERSION 10.5-1.pgdg90+1
+ENV PG_VERSION 10.5-2.pgdg90+1
 
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
@@ -76,7 +76,8 @@ RUN set -x; \
     && pip3 install \ 
         bs4 PyPDF2 transliterate xlrd xlwt odfpy openpyxl SQLAlchemy \
 	config caldav configs phonenumbers qrcode pyldap==2.4.28 \
-	cachetools>=2.0.1 cerberus pyquerystring parse-accept-language jsondiff
+	cachetools>=2.0.1 cerberus pyquerystring parse-accept-language jsondiff \
+	ipdb
 
 RUN set -x; \
     apt-get update \
