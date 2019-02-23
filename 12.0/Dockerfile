@@ -28,10 +28,10 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 12.0
-ENV ODOO_RELEASE 20181102
+ENV ODOO_RELEASE 20190223
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo 'c6226be81107c49517d4614ca5fe15d4d656ef36 odoo.deb' | sha1sum -c - \
+        && echo '75e06b80946aa949d23486776fd9ece8dd104763 odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -53,7 +53,7 @@ RUN set -ex; \
 	apt-key list
 
 ENV PG_MAJOR 10
-ENV PG_VERSION 10.5-2.pgdg90+1
+ENV PG_VERSION 10.7-1.pgdg80+1
 
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
