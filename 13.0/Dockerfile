@@ -4,7 +4,6 @@ MAINTAINER Anton Goroshkin <neobht@sibsau.ru>
 # Generate locale C.UTF-8 for postgres and general locale data
 ENV LANG C.UTF-8
 
-# Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 RUN set -x; \
     apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -44,9 +43,9 @@ RUN set -x;\
     && rm -rf /var/lib/apt/lists/*
 
 # Install Odoo
-ENV ODOO_VERSION 12.0
+ENV ODOO_VERSION 13.0
 ARG ODOO_RELEASE=20191003
-ARG ODOO_SHA=c1ea17a9cc53080b0a44e0cec377f094dddacc36
+ARG ODOO_SHA=7ddcc16b84c69b652bc1e9dac5feb995e260ed90
 
 RUN set -x; \
     curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
@@ -55,7 +54,6 @@ RUN set -x; \
     && apt-get update \
     && apt-get -y install -f --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* odoo.deb
-
 
 # Install Postgres to support pg_dump
 RUN set -ex; \
