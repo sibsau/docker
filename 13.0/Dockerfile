@@ -44,8 +44,8 @@ RUN set -x;\
 
 # Install Odoo
 ENV ODOO_VERSION 13.0
-ARG ODOO_RELEASE=20191003
-ARG ODOO_SHA=019b9e75c679dcdff211a32dd93176732d095540
+ARG ODOO_RELEASE=20191229
+ARG ODOO_SHA=d3199e6f81205d6e05059c046b9eaa75c08d0911
 
 RUN set -x; \
     curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
@@ -68,8 +68,8 @@ RUN set -ex; \
     rm -rf "$GNUPGHOME"; \
     apt-key list
 
-ENV PG_MAJOR 11
-ENV PG_VERSION 11.5-3.pgdg90+1
+ENV PG_MAJOR 12
+ENV PG_VERSION 12.1-1.pgdg90+1
 
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
@@ -96,7 +96,10 @@ RUN pip3 install \
     config caldav configs phonenumbers \
     cachetools>=2.0.1 cerberus pyquerystring parse-accept-language jsondiff \
     ipdb \
-    validate-email==1.3 py3DNS==3.2.0
+    validate-email==1.3 py3DNS==3.2.0 \
+    odoo-client-lib \
+    pymorphy2  pymorphy2-dicts-ru
+
 
 
 RUN set -x; \
