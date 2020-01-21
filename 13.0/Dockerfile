@@ -8,20 +8,25 @@ RUN set -x; \
     apt-get update \
     && apt-get install -y --no-install-recommends \
     ca-certificates \
-    curl \
-    dirmngr \
-    fonts-noto-cjk \
-    gnupg \
-    libssl1.0-dev \
-    node-less \
-    python3-pip \
-    python3-pyldap \
-    python3-qrcode \
-    python3-renderpm \
-    python3-setuptools \
-    python3-vobject \
-    python3-watchdog \
-    xz-utils \
+            curl \
+            dirmngr \
+            fonts-noto-cjk \
+            gnupg \
+            libssl-dev \
+            node-less \
+            npm \
+            python3-num2words \
+            python3-pip \
+            python3-phonenumbers \
+            python3-pyldap \
+            python3-qrcode \
+            python3-renderpm \
+            python3-setuptools \
+            python3-vobject \
+            python3-watchdog \
+            python3-xlrd \
+            python3-xlwt \
+            xz-utils \
     && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
     && echo '7e35a63f9db14f93ec7feeb0fce76b30c08f2057 wkhtmltox.deb' | sha1sum -c - \
     && dpkg --force-depends -i wkhtmltox.deb\
@@ -44,8 +49,8 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 13.0
-ARG ODOO_RELEASE=20191229
-ARG ODOO_SHA=d3199e6f81205d6e05059c046b9eaa75c08d0911
+ARG ODOO_RELEASE=20200121
+ARG ODOO_SHA=770d71cfafb9a8f8419b88f8033b964d5742ad57
 
 RUN set -x; \
     curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
@@ -69,9 +74,9 @@ RUN set -ex; \
     apt-key list
 
 ENV PG_MAJOR 12
-ENV PG_VERSION 12.1-1.pgdg90+1
+ENV PG_VERSION 12.1-1.pgdg100+1
 
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
 RUN apt-get update \
     && apt-get install -y postgresql-common \
@@ -92,8 +97,8 @@ RUN apt-get update \
 #     && 
 
 RUN pip3 install \ 
-    bs4 PyPDF2 transliterate xlrd xlwt odfpy openpyxl SQLAlchemy \
-    config caldav configs phonenumbers \
+    bs4 PyPDF2 transliterate odfpy openpyxl SQLAlchemy \
+    config caldav configs \
     cachetools>=2.0.1 cerberus pyquerystring parse-accept-language jsondiff \
     ipdb \
     validate-email==1.3 py3DNS==3.2.0 \
@@ -113,7 +118,7 @@ RUN set -x; \
     git+https://github.com/edgewall/genshi@stable/0.7.x
 
 # Copy entrypoint script and Odoo configuration file
-RUN pip3 install num2words
+
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
 RUN chown odoo /etc/odoo/odoo.conf
