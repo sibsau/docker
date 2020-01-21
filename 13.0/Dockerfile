@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:buster-slim
 MAINTAINER Anton Goroshkin <neobht@sibsau.ru>
 
 # Generate locale C.UTF-8 for postgres and general locale data
@@ -29,18 +29,18 @@ RUN set -x; \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
 # Install rtlcss (on Debian stretch)
-RUN set -x;\
-    echo "deb http://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && repokey='9FD3B784BC1C6FC31A8A0A1C1655A0AB68576280' \
-    && gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${repokey}" \
-    && gpg --armor --export "${repokey}" | apt-key add - \
-    && gpgconf --kill all \
-    && rm -rf "$GNUPGHOME" \
-    && apt-get update \
-    && apt-get install -y nodejs \
-    && npm install -g rtlcss \
-    && rm -rf /var/lib/apt/lists/*
+# RUN set -x;\
+#     echo "deb http://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
+#     && export GNUPGHOME="$(mktemp -d)" \
+#     && repokey='9FD3B784BC1C6FC31A8A0A1C1655A0AB68576280' \
+#     && gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${repokey}" \
+#     && gpg --armor --export "${repokey}" | apt-key add - \
+#     && gpgconf --kill all \
+#     && rm -rf "$GNUPGHOME" \
+#     && apt-get update \
+#     && apt-get install -y nodejs \
+#     && npm install -g rtlcss \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Install Odoo
 ENV ODOO_VERSION 13.0
