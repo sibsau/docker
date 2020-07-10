@@ -49,8 +49,8 @@ RUN set -x; \
 
 # Install Odoo
 ENV ODOO_VERSION 13.0
-ARG ODOO_RELEASE=20200121
-ARG ODOO_SHA=770d71cfafb9a8f8419b88f8033b964d5742ad57
+ARG ODOO_RELEASE=20200629
+ARG ODOO_SHA=1d86e2728a65ed2c9f6ea9b6b893df878f75599e
 
 RUN set -x; \
     curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
@@ -74,7 +74,7 @@ RUN set -ex; \
     apt-key list
 
 ENV PG_MAJOR 12
-ENV PG_VERSION 12.1-1.pgdg100+1
+ENV PG_VERSION 12.3-1.pgdg100+1
 
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
