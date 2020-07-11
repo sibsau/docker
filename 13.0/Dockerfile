@@ -105,6 +105,7 @@ RUN pip3 install \
     validate-email==1.3 py3DNS==3.2.0 \
     odoo-client-lib \
     pymorphy2  pymorphy2-dicts-ru
+    bokeh==1.1.0
 
 
 
