@@ -1,6 +1,8 @@
 FROM debian:buster-slim
 MAINTAINER Anton Goroshkin <neobht@sibsau.ru>
 
+SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
+
 # Generate locale C.UTF-8 for postgres and general locale data
 ENV LANG C.UTF-8
 
@@ -34,19 +36,22 @@ RUN set -x; \
     && apt-get -y install -f --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
-# Install rtlcss (on Debian stretch)
-# RUN set -x;\
-#     echo "deb http://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
-#     && export GNUPGHOME="$(mktemp -d)" \
-#     && repokey='9FD3B784BC1C6FC31A8A0A1C1655A0AB68576280' \
-#     && gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${repokey}" \
-#     && gpg --armor --export "${repokey}" | apt-key add - \
-#     && gpgconf --kill all \
-#     && rm -rf "$GNUPGHOME" \
-#     && apt-get update \
-#     && apt-get install -y nodejs \
-#     && npm install -g rtlcss \
-#     && rm -rf /var/lib/apt/lists/*
+# install latest postgresql-client
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
+        && GNUPGHOME="$(mktemp -d)" \
+        && export GNUPGHOME \
+        && repokey='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8' \
+        && gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${repokey}" \
+        && gpg --batch --armor --export "${repokey}" > /etc/apt/trusted.gpg.d/pgdg.gpg.asc \
+        && gpgconf --kill all \
+        && rm -rf "$GNUPGHOME" \
+        && apt-get update  \
+        && apt-get install --no-install-recommends -y postgresql-client \
+        && rm -f /etc/apt/sources.list.d/pgdg.list \
+        && rm -rf /var/lib/apt/lists/*
+
+# Install rtlcss (on Debian buster)
+RUN npm install -g rtlcss
 
 # Install Odoo
 ENV ODOO_VERSION 13.0
@@ -62,30 +67,30 @@ RUN set -x; \
     && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Install Postgres to support pg_dump
-RUN set -ex; \
-    # pub   4096R/ACCC4CF8 2011-10-13 [expires: 2019-07-02]
-    #       Key fingerprint = B97B 0AFC AA1A 47F0 44F2  44A0 7FCC 7D46 ACCC 4CF8
-    # uid                  PostgreSQL Debian Repository
-    key='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8'; \
-    export GNUPGHOME="$(mktemp -d)"; \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
-    gpg --export "$key" > /etc/apt/trusted.gpg.d/postgres.gpg; \
-    command -v gpgconf > /dev/null && gpgconf --kill all; \
-    rm -rf "$GNUPGHOME"; \
-    apt-key list
+# RUN set -ex; \
+#     # pub   4096R/ACCC4CF8 2011-10-13 [expires: 2019-07-02]
+#     #       Key fingerprint = B97B 0AFC AA1A 47F0 44F2  44A0 7FCC 7D46 ACCC 4CF8
+#     # uid                  PostgreSQL Debian Repository
+#     key='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8'; \
+#     export GNUPGHOME="$(mktemp -d)"; \
+#     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+#     gpg --export "$key" > /etc/apt/trusted.gpg.d/postgres.gpg; \
+#     command -v gpgconf > /dev/null && gpgconf --kill all; \
+#     rm -rf "$GNUPGHOME"; \
+#     apt-key list
 
-ENV PG_MAJOR 12
-ENV PG_VERSION 12.3-1.pgdg100+1
+# ENV PG_MAJOR 12
+# ENV PG_VERSION 12.3-1.pgdg100+1
 
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
+# RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
-RUN apt-get update \
-    && apt-get install -y postgresql-common \
-    && sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf \
-    && apt-get install -y \
-    postgresql-$PG_MAJOR=$PG_VERSION \
-    rlwrap pg-activity \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update \
+#     && apt-get install -y postgresql-common \
+#     && sed -ri 's/#(create_main_cluster) .*$/\1 = false/' /etc/postgresql-common/createcluster.conf \
+#     && apt-get install -y \
+#     postgresql-$PG_MAJOR=$PG_VERSION \
+#     rlwrap pg-activity \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Install some Python modules
 # RUN set -x; \
@@ -98,13 +103,17 @@ RUN apt-get update \
 #     && 
 
 RUN pip3 install \ 
-    bs4 PyPDF2 transliterate odfpy openpyxl SQLAlchemy \
+    bs4 \
+    PyPDF2 \
+    transliterate \
+    odfpy openpyxl \
+    SQLAlchemy \
     config caldav configs \
     cachetools>=2.0.1 cerberus pyquerystring parse-accept-language jsondiff \
     ipdb \
     validate-email==1.3 py3DNS==3.2.0 \
     odoo-client-lib \
-    pymorphy2  pymorphy2-dicts-ru
+    pymorphy2  pymorphy2-dicts-ru \
     bokeh==1.1.0
 
 
@@ -123,18 +132,20 @@ RUN set -x; \
 
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
-RUN chown odoo /etc/odoo/odoo.conf
 
-# Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
-RUN mkdir -p /mnt/extra-addons \
+# Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
+RUN chown odoo /etc/odoo/odoo.conf \
+    && mkdir -p /mnt/extra-addons \
     && chown -R odoo /mnt/extra-addons
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
 # Expose Odoo services
-EXPOSE 8069 8071
+EXPOSE 8069 8071 8072
 
 # Set the default config file
 ENV ODOO_RC /etc/odoo/odoo.conf
+
+COPY wait-for-psql.py /usr/local/bin/wait-for-psql.py
 
 # Set default user when running the container
 USER odoo
